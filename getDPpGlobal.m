@@ -1,0 +1,10 @@
+function M4 = getDPpGlobal(x3,z3,b,omega,F,tEvolGuess,tOff)
+parVec = [b,omega,F];
+t_graz = 1/omega*atan2(b*omega,1-omega^2);
+A = [0,1;-1,-b];
+t3 = mod(t_graz + z3,2*pi/omega);
+[t4,~] = getIntersection6(x3,0,t3,parVec,tEvolGuess,tOff);
+Dflow = expm((t4-t3)*A);
+uuu = getdflowdt(t4,x3,0,t3,parVec);
+vvv = getdflowdt0(t4,x3,0,t3,parVec);
+M4 = 1/uuu(2)*[Dflow(1,1)*uuu(2) - Dflow(2,1)*uuu(1), uuu(2)*vvv(1) - uuu(1)*vvv(2); -Dflow(2,1), -vvv(2)];
